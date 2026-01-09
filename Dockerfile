@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     git \
+    libfontconfig1 \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装 Godot 4.2.1
@@ -18,9 +19,9 @@ RUN wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 3 \
     && rm /tmp/godot.zip
 
 # 安装导出模板
-RUN mkdir -p /root/.local/share/godot/export_templates \
+RUN mkdir -p /root/.local/share/godot/export_templates/4.2.1.stable \
     && wget -q https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz -O /tmp/templates.tpz \
-    && unzip -q /tmp/templates.tpz -d /root/.local/share/godot/export_templates \
+    && unzip -q /tmp/templates.tpz -d /root/.local/share/godot/export_templates/4.2.1.stable \
     && rm /tmp/templates.tpz
 
 # 设置工作目录
