@@ -67,8 +67,8 @@ jobs:
       - name: Build ${{ matrix.platform }}
         run: |
           mkdir -p build/${{ matrix.platform }}
-          godot --headless --export-release "${{ matrix.target }}" "emotional-fragments${{ matrix.extension }}"
-          ls -la
+          godot --headless --export-release "${{ matrix.target }}" "build/${{ matrix.platform }}/emotional-fragments${{ matrix.extension }}"
+          ls -la build/${{ matrix.platform }}/
 
       - name: Upload ${{ matrix.platform }} artifact
         uses: actions/upload-artifact@v4
