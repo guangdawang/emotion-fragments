@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装 Godot 4.2.1
-RUN wget -q https://downloads.tuxfamily.org/godotengine/4.2.1/Godot_v4.2.1-stable_linux.x86_64.zip -O /tmp/godot.zip \
+RUN wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 3 \
+    https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_linux.x86_64.zip \
+    -O /tmp/godot.zip \
     && unzip -q /tmp/godot.zip -d /usr/local/bin \
     && chmod +x /usr/local/bin/Godot_v4.2.1-stable_linux.x86_64 \
     && ln -s /usr/local/bin/Godot_v4.2.1-stable_linux.x86_64 /usr/local/bin/godot \
