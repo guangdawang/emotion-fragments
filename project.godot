@@ -5,7 +5,7 @@
 [application]
 
 config/name="情绪碎片"
-run/main_scene="res://Scenes/MainScene.tscn"
+run/main_scene="res://Scenes/StartScene.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -16,6 +16,8 @@ EmotionStateMachine="*res://Scripts/EmotionStateMachine.gd"
 FragmentManager="*res://Scripts/FragmentManager.gd"
 VisualEffects="*res://Scripts/VisualEffects.gd"
 AudioManager="*res://Scripts/AudioManager.gd"
+GameConfig="*res://Scripts/GameConfig.gd"
+AchievementSystem="*res://Scripts/AchievementSystem.gd"
 
 [display]
 

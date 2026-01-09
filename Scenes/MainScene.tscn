@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://main_scene"]
+[gd_scene load_steps=8 format=3 uid="uid://main_scene"]
 
 [ext_resource type="Script" path="res://Scripts/GameManager.gd" id="1_0"]
 [ext_resource type="Script" path="res://Scripts/PlayerController.gd" id="2"]
 [ext_resource type="Script" path="res://Scripts/FragmentManager.gd" id="3"]
 [ext_resource type="Script" path="res://Scripts/VisualEffects.gd" id="4"]
 [ext_resource type="Script" path="res://Scripts/AudioManager.gd" id="5"]
+[ext_resource type="PackedScene" uid="uid://ui_scene" path="res://Scenes/UIScene.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://achievement_notification" path="res://Scenes/AchievementNotification.tscn" id="7"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0")
@@ -21,6 +23,14 @@ script = ExtResource("4")
 
 [node name="AudioManager" type="Node" parent="."]
 script = ExtResource("5")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="UIScene" parent="UI"]
+instance = ExtResource("6")
+
+[node name="AchievementNotification" parent="."]
+instance = ExtResource("7")
 
 [node name="BGMPlayer" type="AudioStreamPlayer" parent="AudioManager"]
 volume_db = -10.0

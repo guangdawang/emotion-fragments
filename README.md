@@ -57,20 +57,33 @@ Godot 项目结构相比 Unity 更加简洁直观，核心逻辑均为文本文�
 ├── export_presets.cfg             # 导出配置（用于 GitHub Actions 自动打包）
 ├── Scenes/                        # 游戏场景目录
 │   ├── MainScene.tscn             # 主场景
-│   └── Fragment.tscn              # 碎片场景（包含其脚本和资源引用）
+│   ├── Fragment.tscn               # 碎片场景（包含其脚本和资源引用）
+│   ├── StartScene.tscn             # 启动场景（开始菜单）
+│   ├── GameOverScene.tscn          # 游戏结束场景
+│   ├── TutorialScene.tscn          # 游戏教程场景
+│   ├── UIScene.tscn               # UI界面场景
+│   └── AchievementScene.tscn       # 成就列表场景
 ├── Scripts/                       # 脚本目录
-│   ├── GameManager.gd             # 游戏主控与单例
-│   ├── EmotionStateMachine.gd     # 情绪状态机逻辑
-│   ├── FragmentManager.gd         # 碎片生成与对象池管理
-│   ├── FragmentMotion.gd          # 单个碎片的运动控制
-│   ├── PlayerController.gd        # 玩家输入与移动
-│   ├── VisualEffects.gd           # 视觉反馈与粒子特效
-│   └── AudioManager.gd            # 音频管理（支持动态流式加载）
+│   ├── GameManager.gd               # 游戏主控与单例
+│   ├── EmotionStateMachine.gd       # 情绪状态机逻辑
+│   ├── FragmentManager.gd           # 碎片生成与对象池管理
+│   ├── FragmentMotion.gd            # 单个碎片的运动控制
+│   ├── PlayerController.gd          # 玩家输入与移动
+│   ├── VisualEffects.gd             # 视觉反馈与粒子特效
+│   ├── AudioManager.gd              # 音频管理（支持动态流式加载）
+│   ├── GameConfig.gd               # 游戏配置管理
+│   ├── AchievementSystem.gd          # 成就系统
+│   ├── UIManager.gd                 # UI管理器
+│   ├── StartScene.gd               # 启动场景脚本
+│   ├── GameOverScene.gd            # 游戏结束场景脚本
+│   ├── TutorialScene.gd             # 教程场景脚本
+│   ├── AchievementScene.gd           # 成就场景脚本
+│   └── AchievementNotification.gd    # 成就通知系统
 ├── Shaders/                       # 着色器目录
-│   └── EmotionFragment.gdshader   # 碎片情感可视化着色器
+│   └── EmotionFragment.gdshader     # 碎片情感可视化着色器
 ├── Assets/                        # 资源目录
-│   ├── textures/                  # 图片素材
-│   └── audio/                     # 音频文件
+│   ├── textures/                    # 图片素材
+│   └── audio/                      # 音频文件
 ├── .gitignore                     # Git 忽略文件配置
 └── README.md                      # 项目说明文档
 ```
@@ -108,9 +121,11 @@ Godot 项目结构相比 Unity 更加简洁直观，核心逻辑均为文本文�
 
 ### 运行游戏
 
-1. 在编辑器左下角文件系统中找到 `Scenes/MainScene.tscn`。
+1. 在编辑器左下角文件系统中找到 `Scenes/StartScene.tscn`。
 2. 双击打开场景。
-3. 按下 **F6** (运行当前场景) 或 右上角的播放按钮。
+3. 按下 **F5** (运行项目) 或 右上角的播放按钮。
+
+游戏将从启动场景开始，玩家可以通过菜单选择开始游戏、查看教程或查看成就列表。
 
 ## 游戏系统实现
 
@@ -134,7 +149,8 @@ enum EmotionState {
 
 - **生成**：根据当前情绪维度调整碎片的生成速率和初始位置。
 - **行为**：碎片实例化时挂载 `FragmentMotion.gd`，根据全局状态机改变物理行为（如从规则运动变为布朗运动）。
-- **优化**：建议使用 Godot 内置的 `MultiplayerSpawner` 或简单的对象池数组来复用节点，避免频繁创建销毁导致卡顿。
+- **优化**：使用对象池数组来复用节点，避免频繁创建销毁导致卡顿。
+- **最大数量**：500个碎片，可根据性能需求调整。
 
 ### 视觉系统
 
@@ -147,6 +163,21 @@ Godot 拥有强大的内置音频系统，无需像 Unity 那样依赖重型第�
 
 - **AudioStreamPlayer**：播放背景音乐，通过 `pitch_scale` 属性根据“焦虑值”实时改变音调，制造紧张感。
 - **AudioStreamPlayer2D**：跟随玩家位置的音效（如脉冲声）。
+
+### 成就系统
+
+`AchievementSystem.gd` 管理游戏中的成就解锁和进度：
+
+- **初次接触** - 第一次与碎片互动
+- **混乱大师** - 在混乱阶段保持控制力超过80
+- **希望的使者** - 希望值达到100
+- **重构专家** - 成功完成重构阶段
+- **脉冲大师** - 使用脉冲技能50次
+- **碎片收集者** - 放置100个碎片
+- **秩序守护者** - 在秩序阶段保持希望值超过50
+- **完美主义者** - 以希望值100完成游戏
+
+成就解锁时会在屏幕右下角显示通知，玩家可以在主菜单查看所有成就的进度。
 
 ## 开发说明
 
