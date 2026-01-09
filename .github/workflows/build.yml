@@ -15,10 +15,10 @@ jobs:
       matrix:
         include:
           - platform: Windows
-            target: release/windows
+            target: Windows Desktop
             extension: .exe
           - platform: Web
-            target: release/web
+            target: HTML5
             extension: .html
 
     steps:
