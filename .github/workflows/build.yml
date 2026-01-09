@@ -35,9 +35,17 @@ jobs:
         run: |
           mkdir -p ~/.local/share/godot/export_templates
           curl -L -o templates.tpz https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz
-          unzip templates.tpz -d ~/.local/share/godot/export_templates
+          unzip -q templates.tpz -d ~/.local/share/godot/export_templates
           rm templates.tpz
+          # 检查解压后的目录结构
           ls -la ~/.local/share/godot/export_templates/
+          # 如果解压出的是 templates 目录，需要移动文件
+          if [ -d ~/.local/share/godot/export_templates/templates ]; then
+            mv ~/.local/share/godot/export_templates/templates/* ~/.local/share/godot/export_templates/
+            rmdir ~/.local/share/godot/export_templates/templates
+          fi
+          # 确保版本目录存在
+          ls -la ~/.local/share/godot/export_templates/4.2.1.stable/
 
       - name: Build ${{ matrix.platform }}
         run: |
