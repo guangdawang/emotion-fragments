@@ -33,13 +33,23 @@ jobs:
 
       - name: Build ${{ matrix.platform }}
         run: |
+          mkdir -p build/${{ matrix.platform }}
           godot --headless --export-release "${{ matrix.target }}" "emotional-fragments${{ matrix.extension }}"
+          ls -la
+          if [ -f "emotional-fragments${{ matrix.extension }}" ]; then
+            echo "Build successful!"
+          else
+            echo "Build failed!"
+            exit 1
+          fi
 
       - name: Upload ${{ matrix.platform }} artifact
         uses: actions/upload-artifact@v4
         with:
           name: emotional-fragments-${{ matrix.platform }}
-          path: emotional-fragments${{ matrix.extension }}
+          path: |
+            emotional-fragments${{ matrix.extension }}
+            *.pck
 
   create-release:
     name: Create Release
@@ -63,6 +73,7 @@ jobs:
         with:
           files: |
             build/windows/emotional-fragments.exe
+            build/windows/*.pck
             build/web/*
           draft: false
           prerelease: false
