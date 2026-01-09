@@ -1,4 +1,4 @@
-extends Resource
+extends Node
 
 # 游戏配置
 # 集中管理游戏中的各种参数和设置

@@ -31,6 +31,12 @@ jobs:
           version: 4.2.1
           use-dotnet: false
 
+      - name: Download Export Templates
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates/4.2.1.stable
+          wget https://downloads.tuxfamily.org/godotengine/4.2.1/Godot_v4.2.1-stable_export_templates.tpz
+          unzip Godot_v4.2.1-stable_export_templates.tpz -d ~/.local/share/godot/export_templates/4.2.1.stable
+
       - name: Build ${{ matrix.platform }}
         run: |
           mkdir -p build/${{ matrix.platform }}
