@@ -1,0 +1,96 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: 4.2.1
+  EXPORT_NAME: emotional-fragments
+
+jobs:
+  build-windows:
+    name: Windows Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          wget https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          wget https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz -d ~/.local/share/godot/templates/${{ env.GODOT_VERSION }}.stable
+          chmod +x Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64
+          sudo mv Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 /usr/local/bin/godot
+
+      - name: Build Windows
+        run: |
+          mkdir -p build/windows
+          godot --headless --verbose --export "Windows Desktop" build/windows/${{ env.EXPORT_NAME }}.exe
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: build/windows/${{ env.EXPORT_NAME }}.exe
+
+  build-web:
+    name: Web Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          wget https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          wget https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz -d ~/.local/share/godot/templates/${{ env.GODOT_VERSION }}.stable
+          chmod +x Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64
+          sudo mv Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 /usr/local/bin/godot
+
+      - name: Build Web
+        run: |
+          mkdir -p build/web
+          godot --headless --verbose --export "Web" build/web
+
+      - name: Upload Web Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web
+
+  create-release:
+    name: Create Release
+    needs: [build-windows, build-web]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows Build
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-build
+          path: build/windows
+
+      - name: Download Web Build
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: build/web
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/windows/${{ env.EXPORT_NAME }}.exe
+            build/web/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
