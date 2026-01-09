@@ -33,10 +33,11 @@ jobs:
 
       - name: Download Export Templates
         run: |
-          mkdir -p ~/.local/share/godot/export_templates/4.2.1.stable
-          curl -L -o Godot_v4.2.1-stable_export_templates.tpz https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz
-          unzip Godot_v4.2.1-stable_export_templates.tpz -d ~/.local/share/godot/export_templates/4.2.1.stable
-          rm Godot_v4.2.1-stable_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates
+          curl -L -o templates.tpz https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz
+          unzip templates.tpz -d ~/.local/share/godot/export_templates
+          rm templates.tpz
+          ls -la ~/.local/share/godot/export_templates/
 
       - name: Build ${{ matrix.platform }}
         run: |
