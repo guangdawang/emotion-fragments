@@ -31,7 +31,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}/godot-builder:latest
+          tags: ghcr.io/${{ github.actor }}/godot-builder:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -51,7 +51,7 @@ jobs:
             extension: .html
 
     container:
-      image: ghcr.io/${{ github.repository }}/godot-builder:latest
+      image: ghcr.io/${{ github.actor }}/godot-builder:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
