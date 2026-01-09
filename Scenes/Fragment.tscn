@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://fragment"]
+
+[ext_resource type="Script" path="res://Scripts/FragmentMotion.gd" id="1"]
+[ext_resource type="ShaderMaterial" path="res://Shaders/EmotionFragment.gdshader" id="2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 10.0
+
+[node name="Fragment" type="Area2D"]
+script = ExtResource("1")
+groups = ["fragments"]
+
+[node name="CollisionShape2D" type="CollisionShape2D"]
+shape = SubResource("CircleShape2D_1")
+
+[node name="Sprite2D" type="Sprite2D"]
+modulate = Color(1, 1, 1, 0.8)
+material = ExtResource("2")
+
+[node name="ColorRect" type="ColorRect"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+color = Color(1, 1, 1, 0.5)
+
+[connection signal="body_entered" from="." to="." method="_on_area_2d_body_entered"]

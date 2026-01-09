@@ -1,0 +1,30 @@
+# Godot 4+ specific ignores
+.godot/
+import/
+
+# Imported assets (textures, audio, etc.)
+*.import
+*.remap
+*.ctex
+*.stex
+*.import
+*.bin
+
+# Mono specific
+.mono/
+data_*/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.editorconfig
+
+# Build exports
+*.pck
+*.zip
+
+# Temporary files
+*.tmp
+*.temp
