@@ -75,8 +75,8 @@ jobs:
         with:
           name: emotional-fragments-${{ matrix.platform }}
           path: |
-            emotional-fragments${{ matrix.extension }}
-            *.pck
+            build/${{ matrix.platform }}/emotional-fragments${{ matrix.extension }}
+            build/${{ matrix.platform }}/*.pck
 
   create-release:
     name: Create Release
