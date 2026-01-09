@@ -55,10 +55,7 @@ jobs:
             extension: .html
 
     container:
-      image: ghcr.io/${{ github.actor }}/godot-builder:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      image: barichello/godot-ci:4.2.1
 
     steps:
       - name: Checkout
