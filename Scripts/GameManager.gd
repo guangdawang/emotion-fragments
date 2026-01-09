@@ -177,3 +177,28 @@ func end_game():
 	get_tree().root.add_child(game_over_scene)
 	get_tree().current_scene.queue_free()
 	get_tree().current_scene = game_over_scene
+
+# 信号回调函数
+func _on_player_moved():
+	# 玩家移动时的回调
+	pass
+
+func _on_pulse_activated():
+	# 脉冲激活时的回调
+	add_control(5.0)
+
+func _on_fragment_placed():
+	# 碎片放置时的回调
+	add_hope(10.0)
+
+func _on_fragment_created():
+	# 碎片创建时的回调
+	pass
+
+func _on_fragment_destroyed():
+	# 碎片销毁时的回调
+	add_anxiety(5.0)
+
+func _on_effect_triggered():
+	# 特效触发时的回调
+	pass

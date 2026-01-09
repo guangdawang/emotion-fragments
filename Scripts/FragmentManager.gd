@@ -103,14 +103,14 @@ func setup_fragment_behavior(fragment: Node2D):
 				fragment.position = get_random_position()
 
 func get_ordered_position() -> Vector2:
-	var viewport = get_viewport_rect()
+	var viewport = get_viewport().get_visible_rect()
 	var grid_size = 50
 	var x = (randi() % int(viewport.size.x / grid_size)) * grid_size
 	var y = (randi() % int(viewport.size.y / grid_size)) * grid_size
 	return Vector2(x, y)
 
 func get_random_position() -> Vector2:
-	var viewport = get_viewport_rect()
+	var viewport = get_viewport().get_visible_rect()
 	return Vector2(
 		randf() * viewport.size.x,
 		randf() * viewport.size.y

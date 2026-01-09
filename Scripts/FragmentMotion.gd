@@ -61,7 +61,7 @@ func process_chaos_motion(delta: float):
 	position += velocity * delta
 
 	# 边界反弹
-	var viewport = get_viewport_rect()
+	var viewport = get_viewport().get_visible_rect()
 	if position.x < 0 or position.x > viewport.size.x:
 		velocity.x *= -1
 		position.x = clamp(position.x, 0, viewport.size.x)
