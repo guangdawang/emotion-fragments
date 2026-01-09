@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+.github
+
+# Godot
+.godot
+*.import
+*.tscn.cache
+export_presets.cfg
+
+# Build artifacts
+build/
+*.pck
+*.exe
+
+# Documentation
+README.md
+LICENSE
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,102 @@
+name: Build with Docker
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.platform }} Build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: Windows
+            target: Windows Desktop
+            extension: .exe
+          - platform: Web
+            target: HTML5
+            extension: .html
+
+    container:
+      image: ghcr.io/${{ github.repository }}/godot-builder:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build ${{ matrix.platform }}
+        run: |
+          mkdir -p build/${{ matrix.platform }}
+          godot --headless --export-release "${{ matrix.target }}" "emotional-fragments${{ matrix.extension }}"
+          ls -la
+
+      - name: Upload ${{ matrix.platform }} artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: emotional-fragments-${{ matrix.platform }}
+          path: |
+            emotional-fragments${{ matrix.extension }}
+            *.pck
+
+  create-release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows Build
+        uses: actions/download-artifact@v4
+        with:
+          name: emotional-fragments-Windows
+          path: build/windows
+
+      - name: Download Web Build
+        uses: actions/download-artifact@v4
+        with:
+          name: emotional-fragments-Web
+          path: build/web
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/windows/emotional-fragments.exe
+            build/windows/*.pck
+            build/web/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-docker-image:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}/godot-builder:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
